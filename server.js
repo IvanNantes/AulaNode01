@@ -16,13 +16,14 @@ app.get('/rota', (req, res) => {
 
 app.get('/consulta-cep/:cep', async (req, res) => {
     const cep = req.params.cep;
+    cepRegex.test(cep);
 
     try {
         const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
         res.json(response.data);
         
     } catch (error) {
-        cepRegex.test(cep);
+        
         console.error('Erro ao fazer requisição:', error);
         res.status(500).send('Erro ao consultar o CEP');
         
