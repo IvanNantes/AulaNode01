@@ -1,12 +1,13 @@
-const { Sequelize, DataTypes} = require('sequelize');
-const sequelize = new Sequelize('');
+const { Model, DataTypes } = require('sequelize');
 
-const Endereco = sequelize.define(
-    'Endereco',
-    {
+class Endereco extends Model {}
+
+module.exports = (sequelize) => {
+    Endereco.init({
         Id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            primaryKey: true,
+            autoIncrement: true,
         },
         Cep: {
             type: DataTypes.STRING,
@@ -39,12 +40,12 @@ const Endereco = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-
-    },{
+    }, {
         sequelize,
         modelName: 'Endereco',
         tableName: 'enderecos',
         timestamps: true,
     });
-    
-module.exports = Endereco;
+
+    return Endereco;
+};
