@@ -87,3 +87,31 @@ exports.deleteEndereco = async (req, res) => {
     }
 };
 
+exports.createEnderecoByCep = async (req, res) => {
+    const { cep } = req.params;
+
+    try {      
+        const responseData = await getViaCepData(cep);
+
+        if (responseData.erro) {
+            return res.status(400).json({ error: 'CEP não encontrado' });
+        }
+
+        const { logradouro, bairro, localidade, uf, complemento } = responseData;
+        const novoEndereco = await Endereco.create({
+            Cep: cep.replace(/\D/g, ''),
+            Logradouro: logradouro,
+            Bairro: bairro,
+            Cidade: localidade,
+            Estado: uf,
+            Complemento: complemento,
+            Numero: null, 
+            MunicipioIBGE: null  
+        });
+
+        res.status(201).json(novoEndereco);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro na criação do endereço', details: error.message });
+    }
+};
+
